@@ -1,4 +1,6 @@
 import entity.Iris;
+import service.activationfunction.ActivationFunction;
+import service.activationfunction.impl.ReLU;
 import service.activationfunction.impl.Sigmoid;
 import utility.IrisDataReader;
 
@@ -26,6 +28,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        //testOptimizer(new AMSGradOptimizer(), 0.01);
+        //testOptimizer(new RpropOptimizer(), 0);
+        //testOptimizer(new RmspropGravesOptimizer(), 0.01);
+        testOptimizer(new QuickpropOptimizer(), new ReLU(), 0.01);
+    }
+
+    private static void testOptimizer(Optimizer optimizer, ActivationFunction activationFunction, double learningRate) {
         // 1. Загружаем данные
         List<Iris> dataset = getIrisDataset();
 
@@ -42,10 +51,10 @@ public class Main {
 
         // 4. Инициализируем сеть
         NeuralNetwork network = new NeuralNetwork();
-        network.addLayer(8, new Sigmoid());
-        network.addLayer(3, new Sigmoid());
-        network.setOptimizer(new AMSGradOptimizer());
-        network.setLearningRate(0.01);
+        network.addLayer(8, activationFunction);
+        network.addLayer(3, activationFunction);
+        network.setOptimizer(optimizer);
+        network.setLearningRate(learningRate);
 
         // 5. Параметры обучения
         int epochs = 500;
