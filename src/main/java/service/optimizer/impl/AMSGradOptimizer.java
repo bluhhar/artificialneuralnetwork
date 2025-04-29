@@ -15,16 +15,16 @@ public class AMSGradOptimizer implements Optimizer {
 
     private Regularizer regularizer;
 
-    private double beta1 = 0.9;
-    private double beta2 = 0.999;
-    private double epsilon = 1e-8;
+    private final double beta1 = 0.9;
+    private final double beta2 = 0.999;
+    private final double epsilon = 1e-8;
 
-    private Map<Neuron, double[]> m = new HashMap<>();
-    private Map<Neuron, double[]> v = new HashMap<>();
-    private Map<Neuron, double[]> vHat = new HashMap<>();
-    private Map<Neuron, Double> biasM = new HashMap<>();
-    private Map<Neuron, Double> biasV = new HashMap<>();
-    private Map<Neuron, Double> biasVHat = new HashMap<>();
+    private final Map<Neuron, double[]> m = new HashMap<>();
+    private final Map<Neuron, double[]> v = new HashMap<>();
+    private final Map<Neuron, double[]> vHat = new HashMap<>();
+    private final Map<Neuron, Double> biasM = new HashMap<>();
+    private final Map<Neuron, Double> biasV = new HashMap<>();
+    private final Map<Neuron, Double> biasVHat = new HashMap<>();
 
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {

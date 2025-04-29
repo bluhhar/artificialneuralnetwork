@@ -8,6 +8,7 @@ import service.activationfunction.impl.Sigmoid;
 import service.optimizer.impl.AMSGradOptimizer;
 import service.optimizer.impl.RmspropGravesOptimizer;
 import service.optimizer.impl.SGDOptimizer;
+import service.regularizer.impl.GroupLassoRegularizer;
 import util.Exec;
 import util.Fixtures;
 import util.Timer;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-public class OptimizerTest {
+public class RegularizerTest {
 
     private Fixtures fixtures;
     private Timer timer;
@@ -31,13 +32,13 @@ public class OptimizerTest {
     }
 
     @Test
-    void testSGDOptimizer() {
-        String label = "Test SGDOptimizer";
+    void testSGDRegularizer() {
+        String label = "Test SGDRegularizer";
         Exec exec = new Exec();
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new SGDOptimizer(),
+                new SGDOptimizer(new GroupLassoRegularizer(0.001)),
                 new Sigmoid(),
                 0.01,
                 1000,
@@ -48,13 +49,13 @@ public class OptimizerTest {
     }
 
     @Test
-    void testAMSGradOptimizer() {
-        String label = "Test AMSGradOptimizer";
+    void testAMSGradRegularizer() {
+        String label = "Test AMSGradRegularizer";
         Exec exec = new Exec();
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new AMSGradOptimizer(),
+                new AMSGradOptimizer(new GroupLassoRegularizer(0.001)),
                 new Sigmoid(),
                 0.01,
                 1000,
@@ -65,13 +66,13 @@ public class OptimizerTest {
     }
 
     @Test
-    void testRmspropGravesOptimizer() {
-        String label = "Test RmspropGravesOptimizer";
+    void testRmspropGravesRegularizer() {
+        String label = "Test RmspropGravesRegularizer";
         Exec exec = new Exec();
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new RmspropGravesOptimizer(),
+                new RmspropGravesOptimizer(new GroupLassoRegularizer(0.001)),
                 new Sigmoid(),
                 0.01,
                 1000,
