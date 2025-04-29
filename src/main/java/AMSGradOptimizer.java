@@ -14,6 +14,16 @@ public class AMSGradOptimizer implements Optimizer {
     private Map<Neuron, Double> biasV = new HashMap<>();
     private Map<Neuron, Double> biasVHat = new HashMap<>();
 
+    private Regularizer regularizer;
+
+    public AMSGradOptimizer() {
+        this.regularizer = null;
+    }
+
+    public AMSGradOptimizer(Regularizer regularizer) {
+        this.regularizer = regularizer;
+    }
+
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {
         int n = inputs.length;
@@ -31,8 +41,18 @@ public class AMSGradOptimizer implements Optimizer {
 
         double delta = neuron.getDelta();
 
+        double[] weights = neuron.getWeights();
+
+        double[] regGradient = null;
+        if (regularizer != null) {
+            regGradient = regularizer.computeGradient(weights);
+        }
+
         for (int i = 0; i < n; i++) {
             double grad = delta * inputs[i];
+            if (regGradient != null) {
+                grad += regGradient[i];
+            }
 
             mNeuron[i] = beta1 * mNeuron[i] + (1 - beta1) * grad;
             vNeuron[i] = beta2 * vNeuron[i] + (1 - beta2) * grad * grad;

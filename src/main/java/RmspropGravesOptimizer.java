@@ -11,6 +11,16 @@ public class RmspropGravesOptimizer implements Optimizer {
     private final Map<Neuron, Double> egBias = new HashMap<>();
     private final Map<Neuron, Double> eg2Bias = new HashMap<>();
 
+    private Regularizer regularizer;
+
+    public RmspropGravesOptimizer() {
+        this.regularizer = null;
+    }
+
+    public RmspropGravesOptimizer(Regularizer regularizer) {
+        this.regularizer = regularizer;
+    }
+
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {
         int n = inputs.length;
@@ -25,8 +35,18 @@ public class RmspropGravesOptimizer implements Optimizer {
 
         double delta = neuron.getDelta();
 
+        double[] weights = neuron.getWeights();
+
+        double[] regGradient = null;
+        if (regularizer != null) {
+            regGradient = regularizer.computeGradient(weights);
+        }
+
         for (int i = 0; i < n; i++) {
             double grad = delta * inputs[i];
+            if (regGradient != null) {
+                grad += regGradient[i];
+            }
 
             egNeuron[i] = rho * egNeuron[i] + (1 - rho) * grad;
             eg2Neuron[i] = rho * eg2Neuron[i] + (1 - rho) * grad * grad;
