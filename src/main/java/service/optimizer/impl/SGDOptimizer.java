@@ -1,19 +1,15 @@
 package service.optimizer.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import service.Neuron;
 import service.optimizer.Optimizer;
 import service.regularizer.Regularizer;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class SGDOptimizer implements Optimizer {
     private Regularizer regularizer;
-
-    public SGDOptimizer() {
-        this.regularizer = null;
-    }
-
-    public SGDOptimizer(Regularizer regularizer) {
-        this.regularizer = regularizer;
-    }
 
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {
