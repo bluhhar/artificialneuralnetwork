@@ -9,6 +9,7 @@ import java.util.Random;
 @Getter
 @Setter
 public class Neuron {
+
     private double[] weights;
     private double bias;
     private ActivationFunction activationFunction;

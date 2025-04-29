@@ -1,5 +1,7 @@
 package service.optimizer.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import service.Neuron;
 import service.optimizer.Optimizer;
 import service.regularizer.Regularizer;
@@ -7,28 +9,22 @@ import service.regularizer.Regularizer;
 import java.util.HashMap;
 import java.util.Map;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class AMSGradOptimizer implements Optimizer {
+
+    private Regularizer regularizer;
+
     private double beta1 = 0.9;
     private double beta2 = 0.999;
     private double epsilon = 1e-8;
 
-    // Для каждого нейрона будем хранить его моменты
     private Map<Neuron, double[]> m = new HashMap<>();
     private Map<Neuron, double[]> v = new HashMap<>();
     private Map<Neuron, double[]> vHat = new HashMap<>();
     private Map<Neuron, Double> biasM = new HashMap<>();
     private Map<Neuron, Double> biasV = new HashMap<>();
     private Map<Neuron, Double> biasVHat = new HashMap<>();
-
-    private Regularizer regularizer;
-
-    public AMSGradOptimizer() {
-        this.regularizer = null;
-    }
-
-    public AMSGradOptimizer(Regularizer regularizer) {
-        this.regularizer = regularizer;
-    }
 
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {

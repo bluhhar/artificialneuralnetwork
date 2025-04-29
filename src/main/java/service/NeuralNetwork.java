@@ -39,7 +39,7 @@ public class NeuralNetwork {
         predict(input);
 
         // 1. Вычисляем дельты на выходном слое
-        Layer outputLayer = layers.get(layers.size() - 1);
+        Layer outputLayer = layers.getLast();
         for (int i = 0; i < outputLayer.getNeurons().length; i++) {
             Neuron neuron = outputLayer.getNeurons()[i];
             double error = target[i] - neuron.getOutput();

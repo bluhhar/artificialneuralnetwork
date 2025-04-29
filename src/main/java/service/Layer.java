@@ -9,6 +9,7 @@ import java.util.Random;
 @Getter
 @Setter
 public class Layer {
+
     private Neuron[] neurons;
 
     public Layer(int numberOfNeurons, int inputSizePerNeuron, ActivationFunction activationFunction, Random random) {

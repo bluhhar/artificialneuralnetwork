@@ -1,5 +1,7 @@
 package service.optimizer.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import service.Neuron;
 import service.optimizer.Optimizer;
 import service.regularizer.Regularizer;
@@ -7,7 +9,12 @@ import service.regularizer.Regularizer;
 import java.util.HashMap;
 import java.util.Map;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class RmspropGravesOptimizer implements Optimizer {
+
+    private Regularizer regularizer;
+
     private final double rho = 0.95;
     private final double epsilon = 1e-4;
 
@@ -16,16 +23,6 @@ public class RmspropGravesOptimizer implements Optimizer {
 
     private final Map<Neuron, Double> egBias = new HashMap<>();
     private final Map<Neuron, Double> eg2Bias = new HashMap<>();
-
-    private Regularizer regularizer;
-
-    public RmspropGravesOptimizer() {
-        this.regularizer = null;
-    }
-
-    public RmspropGravesOptimizer(Regularizer regularizer) {
-        this.regularizer = regularizer;
-    }
 
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {
