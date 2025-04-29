@@ -7,7 +7,9 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
@@ -15,7 +17,9 @@ public class Main {
         //test1();
         //test2();
         //test3();
-        test4();
+        //test4();
+        //test5();
+        test6();
     }
 
     private static void test1() {
@@ -99,5 +103,96 @@ public class Main {
         for (Iris sample : dataset) {
             network.train(sample.features, sample.label);
         }
+    }
+
+    private static void test5() {
+        String resourcePath = "datasets/iris.csv";
+        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
+        Path path = null;
+        try {
+            path = Paths.get(resourceUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        List<Iris> dataset = IrisDataReader.load(path.toString());
+
+        NeuralNetwork network = new NeuralNetwork();
+        network.addLayer(8, new Sigmoid());
+        network.addLayer(3, new Sigmoid());
+        network.setOptimizer(new AMSGradOptimizer());
+        network.setLearningRate(0.01);
+
+        int epochs = 1000;
+        for (int epoch = 0; epoch < epochs; epoch++) {
+            for (Iris sample : dataset) {
+                network.train(sample.features, sample.label);
+            }
+        }
+    }
+
+    private static void test6() {
+        // 1. Загружаем данные
+        String resourcePath = "datasets/iris.csv";
+        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
+        Path path = null;
+        try {
+            path = Paths.get(resourceUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        List<Iris> dataset = IrisDataReader.load(path.toString());
+
+        // 2. Инициализируем сеть
+        NeuralNetwork network = new NeuralNetwork();
+        network.addLayer(8, new Sigmoid());
+        network.addLayer(3, new Sigmoid());
+        network.setOptimizer(new AMSGradOptimizer());
+        network.setLearningRate(0.01);
+
+        // 3. Параметры обучения
+        int epochs = 500;
+        Random random = new Random();
+
+        for (int epoch = 1; epoch <= epochs; epoch++) {
+            Collections.shuffle(dataset, random); // Перемешиваем для обучения
+
+            double totalLoss = 0.0;
+            int correct = 0;
+
+            for (Iris sample : dataset) {
+                network.train(sample.features, sample.label);
+
+                double[] prediction = network.predict(sample.features);
+
+                // Подсчёт ошибки (сумма квадратов ошибок)
+                for (int i = 0; i < prediction.length; i++) {
+                    totalLoss += Math.pow(sample.label[i] - prediction[i], 2);
+                }
+
+                // Подсчёт правильных предсказаний
+                if (argMax(prediction) == argMax(sample.label)) {
+                    correct++;
+                }
+            }
+
+            double averageLoss = totalLoss / dataset.size();
+            double accuracy = (correct * 100.0) / dataset.size();
+
+            if (epoch % 10 == 0 || epoch == 1) {
+                System.out.printf("Эпоха %d: Loss = %.6f, Accuracy = %.2f%%\n", epoch, averageLoss, accuracy);
+            }
+        }
+    }
+
+    private static int argMax(double[] array) {
+        int bestIndex = 0;
+        double bestValue = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > bestValue) {
+                bestValue = array[i];
+                bestIndex = i;
+            }
+        }
+        return bestIndex;
     }
 }
