@@ -1,4 +1,5 @@
 import entity.Iris;
+import service.activationfunction.impl.Sigmoid;
 import utility.IrisDataReader;
 
 import java.net.URISyntaxException;
@@ -11,6 +12,11 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+        //test1();
+        test2();
+    }
+
+    private static void test1() {
         String resourcePath = "datasets/iris.csv";
         URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
         Path path = null;
@@ -27,4 +33,12 @@ public class Main {
         }
     }
 
+    private static void test2() {
+        NeuralNetwork network = new NeuralNetwork();
+        network.addLayer(8, new Sigmoid()); // Скрытый слой на 8 нейронов
+        network.addLayer(3, new Sigmoid()); // Выходной слой (3 класса)
+
+        double[] prediction = network.predict(new double[]{0.5, 0.2, 0.7, 0.1});
+        System.out.println(Arrays.toString(prediction));
+    }
 }

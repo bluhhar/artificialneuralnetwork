@@ -6,11 +6,12 @@ public class Sigmoid implements ActivationFunction {
 
     @Override
     public double activate(double x) {
-        return 0;
+        return 1.0 / (1.0 + Math.exp(-x));
     }
 
     @Override
     public double derivative(double x) {
-        return 0;
+        double sig = activate(x);
+        return sig * (1 - sig);
     }
 }
