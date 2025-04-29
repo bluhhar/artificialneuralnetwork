@@ -12,6 +12,8 @@ public class NeuralNetwork {
 
     private List<Layer> layers;
     private Random random = new Random();
+    private Optimizer optimizer;
+    private double learningRate = 0.01;
 
     public NeuralNetwork() {
         layers = new ArrayList<>();
@@ -30,12 +32,11 @@ public class NeuralNetwork {
         return output;
     }
 
-    public void train(double[] input, double[] target, double learningRate) {
-        // 1. Прямой проход
+    public void train(double[] input, double[] target) {
         predict(input);
 
-        // 2. Вычисление ошибки на выходном слое
-        Layer outputLayer = layers.getLast();
+        // 1. Вычисляем дельты на выходном слое
+        Layer outputLayer = layers.get(layers.size() - 1);
         for (int i = 0; i < outputLayer.getNeurons().length; i++) {
             Neuron neuron = outputLayer.getNeurons()[i];
             double error = target[i] - neuron.getOutput();
@@ -43,8 +44,8 @@ public class NeuralNetwork {
             neuron.setDelta(delta);
         }
 
-        // 3. Вычисление ошибки для скрытых слоёв
-        for (int l = layers.size() - 2; l >= 0; l--) { // от предпоследнего к первому
+        // 2. Вычисляем дельты для скрытых слоёв
+        for (int l = layers.size() - 2; l >= 0; l--) {
             Layer currentLayer = layers.get(l);
             Layer nextLayer = layers.get(l + 1);
 
@@ -59,22 +60,14 @@ public class NeuralNetwork {
             }
         }
 
-        // 4. Обновление весов и смещений
-        double[] prevOutputs = input; // на входе первый слой получает input
+        // 3. Обновляем веса через оптимизатор
+        double[] prevOutputs = input;
         for (Layer layer : layers) {
             double[] newPrevOutputs = new double[layer.getNeurons().length];
             for (int i = 0; i < layer.getNeurons().length; i++) {
                 Neuron neuron = layer.getNeurons()[i];
-                double delta = neuron.getDelta();
 
-                // Обновляем веса
-                for (int j = 0; j < neuron.getWeights().length; j++) {
-                    double oldWeight = neuron.getWeights()[j];
-                    neuron.setWeight(j, oldWeight + learningRate * delta * prevOutputs[j]);
-                }
-
-                // Обновляем смещение
-                neuron.setBias(neuron.getBias() + learningRate * delta);
+                optimizer.update(neuron, prevOutputs, learningRate); // 🔥 используем оптимизатор
 
                 newPrevOutputs[i] = neuron.getOutput();
             }

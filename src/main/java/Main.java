@@ -14,7 +14,8 @@ public class Main {
     public static void main(String[] args) {
         //test1();
         //test2();
-        test3();
+        //test3();
+        test4();
     }
 
     private static void test1() {
@@ -64,7 +65,7 @@ public class Main {
         for (int epoch = 0; epoch < epochs; epoch++) {
             double totalError = 0.0;
             for (Iris sample : dataset) {
-                network.train(sample.features, sample.label, learningRate);
+                network.train(sample.features, sample.label);
 
                 // Вычисляем ошибку (сумма квадратов ошибок)
                 double[] output = network.predict(sample.features);
@@ -75,6 +76,28 @@ public class Main {
             if (epoch % 100 == 0) {
                 System.out.println("Эпоха " + epoch + ", Ошибка: " + totalError);
             }
+        }
+    }
+
+    private static void test4() {
+        String resourcePath = "datasets/iris.csv";
+        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
+        Path path = null;
+        try {
+            path = Paths.get(resourceUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        List<Iris> dataset = IrisDataReader.load(path.toString());
+
+        NeuralNetwork network = new NeuralNetwork();
+        network.addLayer(8, new Sigmoid());
+        network.addLayer(3, new Sigmoid());
+        network.setOptimizer(new SGDOptimizer());
+        network.setLearningRate(0.1);
+
+        for (Iris sample : dataset) {
+            network.train(sample.features, sample.label);
         }
     }
 }
