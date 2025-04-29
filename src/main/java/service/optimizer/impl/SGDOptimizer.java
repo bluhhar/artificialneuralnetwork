@@ -1,3 +1,9 @@
+package service.optimizer.impl;
+
+import service.Neuron;
+import service.optimizer.Optimizer;
+import service.regularizer.Regularizer;
+
 public class SGDOptimizer implements Optimizer {
     private Regularizer regularizer;
 

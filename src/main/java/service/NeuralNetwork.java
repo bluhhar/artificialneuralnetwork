@@ -1,6 +1,9 @@
+package service;
+
 import lombok.Getter;
 import lombok.Setter;
 import service.activationfunction.ActivationFunction;
+import service.optimizer.Optimizer;
 
 import java.util.ArrayList;
 import java.util.List;

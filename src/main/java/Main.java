@@ -1,14 +1,14 @@
 import entity.Iris;
+import service.NeuralNetwork;
 import service.activationfunction.ActivationFunction;
-import service.activationfunction.impl.ReLU;
 import service.activationfunction.impl.Sigmoid;
+import service.optimizer.Optimizer;
 import utility.IrisDataReader;
 
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -28,13 +28,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //testOptimizer(new AMSGradOptimizer(), new Sigmoid(), 0.01);
-        //testOptimizer(new RpropOptimizer(), 0);
-        //testOptimizer(new RmspropGravesOptimizer(), 0.01);
-        //testOptimizer(new QuickpropOptimizer(), new ReLU(), 0.01);
-        //testOptimizer(new SGDOptimizer(new GroupLassoRegularizer(0.001)), new Sigmoid(), 0.01);
-        //testOptimizer(new AMSGradOptimizer(new GroupLassoRegularizer(0.001)), new Sigmoid(), 0.01);
-        testOptimizer(new RmspropGravesOptimizer(new GroupLassoRegularizer(0.001)), new Sigmoid(), 0.01);
+        //testOptimizer(new service.optimizer.impl.AMSGradOptimizer(), new Sigmoid(), 0.01);
+        //testOptimizer(new service.optimizer.impl.RpropOptimizer(), 0);
+        //testOptimizer(new service.optimizer.impl.RmspropGravesOptimizer(), 0.01);
+        //testOptimizer(new service.optimizer.impl.QuickpropOptimizer(), new ReLU(), 0.01);
+        //testOptimizer(new service.optimizer.impl.SGDOptimizer(new service.regularizer.impl.GroupLassoRegularizer(0.001)), new Sigmoid(), 0.01);
+        //testOptimizer(new service.optimizer.impl.AMSGradOptimizer(new service.regularizer.impl.GroupLassoRegularizer(0.001)), new Sigmoid(), 0.01);
+        testOptimizer(new service.optimizer.impl.RmspropGravesOptimizer(new service.regularizer.impl.GroupLassoRegularizer(0.001)), new Sigmoid(), 0.01);
     }
 
     private static void testOptimizer(Optimizer optimizer, ActivationFunction activationFunction, double learningRate) {

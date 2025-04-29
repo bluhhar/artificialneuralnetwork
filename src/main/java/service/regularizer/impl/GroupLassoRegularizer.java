@@ -1,9 +1,11 @@
+package service.regularizer.impl;
+
+import lombok.AllArgsConstructor;
+import service.regularizer.Regularizer;
+
+@AllArgsConstructor
 public class GroupLassoRegularizer implements Regularizer {
     private double lambda;
-
-    public GroupLassoRegularizer(double lambda) {
-        this.lambda = lambda;
-    }
 
     @Override
     public double[] computeGradient(double[] weights) {

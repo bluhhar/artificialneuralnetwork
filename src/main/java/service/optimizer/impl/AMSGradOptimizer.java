@@ -1,3 +1,9 @@
+package service.optimizer.impl;
+
+import service.Neuron;
+import service.optimizer.Optimizer;
+import service.regularizer.Regularizer;
+
 import java.util.HashMap;
 import java.util.Map;
 

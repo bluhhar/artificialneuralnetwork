@@ -1,3 +1,5 @@
+package service;
+
 import lombok.Getter;
 import lombok.Setter;
 import service.activationfunction.ActivationFunction;
