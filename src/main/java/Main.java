@@ -1,19 +1,30 @@
-import activationfunction.impl.ReLU;
-import activationfunction.impl.Sigmoid;
+import entity.Iris;
+import utility.IrisDataReader;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        NeuralNetwork nn = new NeuralNetwork();
-        nn.addLayer(new Layer(5, 4, new ReLU()));
-        nn.addLayer(new Layer(3, 5, new Sigmoid()));
-
-        double[] input = {5.1, 3.5, 1.4, 0.2};
-        double[] output = nn.predict(input);
-
-        System.out.println("Output: " + Arrays.toString(output));
+        String resourcePath = "datasets/iris.csv";
+        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
+        Path path = null;
+        try {
+            path = Paths.get(resourceUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        List<Iris> data = IrisDataReader.load(path.toString());
+        System.out.println("Загружено " + data.size() + " образцов");
+        System.out.println("Пример: " + Arrays.toString(data.getFirst().features) + " -> " + Arrays.toString(data.getFirst().label));
+        for (Iris iris : data) {
+            System.out.println(Arrays.toString(iris.features) + " -> " + Arrays.toString(iris.label));
+        }
     }
 
 }

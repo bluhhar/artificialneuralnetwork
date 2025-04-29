@@ -1,4 +1,4 @@
-package activationfunction;
+package service.activationfunction;
 
 public interface ActivationFunction {
 
