@@ -13,175 +13,86 @@ import java.util.Random;
 
 public class Main {
 
+    private static List<Iris> getIrisDataset() {
+        String resourcePath = "datasets/iris.csv";
+        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
+        Path path = null;
+        try {
+            path = Paths.get(resourceUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return IrisDataReader.load(path.toString());
+    }
+
     public static void main(String[] args) {
-        //test1();
-        //test2();
-        //test3();
-        //test4();
-        //test5();
-        test6();
-    }
-
-    private static void test1() {
-        String resourcePath = "datasets/iris.csv";
-        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
-        Path path = null;
-        try {
-            path = Paths.get(resourceUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        List<Iris> data = IrisDataReader.load(path.toString());
-        System.out.println("Загружено " + data.size() + " образцов");
-        System.out.println("Пример: " + Arrays.toString(data.getFirst().features) + " -> " + Arrays.toString(data.getFirst().label));
-        for (Iris iris : data) {
-            System.out.println(Arrays.toString(iris.features) + " -> " + Arrays.toString(iris.label));
-        }
-    }
-
-    private static void test2() {
-        NeuralNetwork network = new NeuralNetwork();
-        network.addLayer(8, new Sigmoid()); // Скрытый слой на 8 нейронов
-        network.addLayer(3, new Sigmoid()); // Выходной слой (3 класса)
-
-        double[] prediction = network.predict(new double[]{0.5, 0.2, 0.7, 0.1});
-        System.out.println(Arrays.toString(prediction));
-    }
-
-    private static void test3() {
-        String resourcePath = "datasets/iris.csv";
-        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
-        Path path = null;
-        try {
-            path = Paths.get(resourceUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        List<Iris> dataset = IrisDataReader.load(path.toString());
-
-        NeuralNetwork network = new NeuralNetwork();
-        network.addLayer(8, new Sigmoid());
-        network.addLayer(3, new Sigmoid());
-
-        double learningRate = 0.1;
-        int epochs = 1000;
-
-        for (int epoch = 0; epoch < epochs; epoch++) {
-            double totalError = 0.0;
-            for (Iris sample : dataset) {
-                network.train(sample.features, sample.label);
-
-                // Вычисляем ошибку (сумма квадратов ошибок)
-                double[] output = network.predict(sample.features);
-                for (int i = 0; i < output.length; i++) {
-                    totalError += Math.pow(sample.label[i] - output[i], 2);
-                }
-            }
-            if (epoch % 100 == 0) {
-                System.out.println("Эпоха " + epoch + ", Ошибка: " + totalError);
-            }
-        }
-    }
-
-    private static void test4() {
-        String resourcePath = "datasets/iris.csv";
-        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
-        Path path = null;
-        try {
-            path = Paths.get(resourceUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        List<Iris> dataset = IrisDataReader.load(path.toString());
-
-        NeuralNetwork network = new NeuralNetwork();
-        network.addLayer(8, new Sigmoid());
-        network.addLayer(3, new Sigmoid());
-        network.setOptimizer(new SGDOptimizer());
-        network.setLearningRate(0.1);
-
-        for (Iris sample : dataset) {
-            network.train(sample.features, sample.label);
-        }
-    }
-
-    private static void test5() {
-        String resourcePath = "datasets/iris.csv";
-        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
-        Path path = null;
-        try {
-            path = Paths.get(resourceUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        List<Iris> dataset = IrisDataReader.load(path.toString());
-
-        NeuralNetwork network = new NeuralNetwork();
-        network.addLayer(8, new Sigmoid());
-        network.addLayer(3, new Sigmoid());
-        network.setOptimizer(new AMSGradOptimizer());
-        network.setLearningRate(0.01);
-
-        int epochs = 1000;
-        for (int epoch = 0; epoch < epochs; epoch++) {
-            for (Iris sample : dataset) {
-                network.train(sample.features, sample.label);
-            }
-        }
-    }
-
-    private static void test6() {
         // 1. Загружаем данные
-        String resourcePath = "datasets/iris.csv";
-        URL resourceUrl = Main.class.getClassLoader().getResource(resourcePath);
-        Path path = null;
-        try {
-            path = Paths.get(resourceUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        List<Iris> dataset = IrisDataReader.load(path.toString());
+        List<Iris> dataset = getIrisDataset();
 
-        // 2. Инициализируем сеть
+        // 2. Перемешиваем данные
+        Collections.shuffle(dataset, new Random());
+
+        // 3. Делим на обучающую и тестовую выборки
+        int trainSize = (int) (dataset.size() * 0.8);
+        List<Iris> trainSet = dataset.subList(0, trainSize);
+        List<Iris> testSet = dataset.subList(trainSize, dataset.size());
+
+        System.out.println("Обучающая выборка: " + trainSet.size() + " примеров");
+        System.out.println("Тестовая выборка: " + testSet.size() + " примеров");
+
+        // 4. Инициализируем сеть
         NeuralNetwork network = new NeuralNetwork();
         network.addLayer(8, new Sigmoid());
         network.addLayer(3, new Sigmoid());
         network.setOptimizer(new AMSGradOptimizer());
         network.setLearningRate(0.01);
 
-        // 3. Параметры обучения
+        // 5. Параметры обучения
         int epochs = 500;
         Random random = new Random();
 
         for (int epoch = 1; epoch <= epochs; epoch++) {
-            Collections.shuffle(dataset, random); // Перемешиваем для обучения
+            Collections.shuffle(trainSet, random); // Перемешиваем только тренировку
 
             double totalLoss = 0.0;
             int correct = 0;
 
-            for (Iris sample : dataset) {
+            for (Iris sample : trainSet) {
                 network.train(sample.features, sample.label);
 
                 double[] prediction = network.predict(sample.features);
 
-                // Подсчёт ошибки (сумма квадратов ошибок)
+                // Вычисляем ошибку
                 for (int i = 0; i < prediction.length; i++) {
                     totalLoss += Math.pow(sample.label[i] - prediction[i], 2);
                 }
 
-                // Подсчёт правильных предсказаний
+                // Подсчёт правильных предсказаний на обучении
                 if (argMax(prediction) == argMax(sample.label)) {
                     correct++;
                 }
             }
 
-            double averageLoss = totalLoss / dataset.size();
-            double accuracy = (correct * 100.0) / dataset.size();
+            double averageLoss = totalLoss / trainSet.size();
+            double trainAccuracy = (correct * 100.0) / trainSet.size();
 
             if (epoch % 10 == 0 || epoch == 1) {
-                System.out.printf("Эпоха %d: Loss = %.6f, Accuracy = %.2f%%\n", epoch, averageLoss, accuracy);
+                double testAccuracy = evaluate(network, testSet);
+                System.out.printf("Эпоха %d: Train Loss = %.6f, Train Accuracy = %.2f%%, Test Accuracy = %.2f%%\n",
+                        epoch, averageLoss, trainAccuracy, testAccuracy);
             }
         }
+    }
+
+    private static double evaluate(NeuralNetwork network, List<Iris> testSet) {
+        int correct = 0;
+        for (Iris sample : testSet) {
+            double[] prediction = network.predict(sample.features);
+            if (argMax(prediction) == argMax(sample.label)) {
+                correct++;
+            }
+        }
+        return (correct * 100.0) / testSet.size();
     }
 
     private static int argMax(double[] array) {
