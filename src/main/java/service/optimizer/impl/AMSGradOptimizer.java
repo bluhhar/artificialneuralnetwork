@@ -1,7 +1,6 @@
 package service.optimizer.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import service.Neuron;
 import service.optimizer.Optimizer;
 import service.regularizer.Regularizer;
@@ -10,13 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class AMSGradOptimizer implements Optimizer {
 
     private Regularizer regularizer;
 
-    private final double beta1 = 0.9;
-    private final double beta2 = 0.999;
+    private double betaOne;
+    private double betaTwo;
     private final double epsilon = 1e-8;
 
     private final Map<Neuron, double[]> m = new HashMap<>();
@@ -25,6 +23,11 @@ public class AMSGradOptimizer implements Optimizer {
     private final Map<Neuron, Double> biasM = new HashMap<>();
     private final Map<Neuron, Double> biasV = new HashMap<>();
     private final Map<Neuron, Double> biasVHat = new HashMap<>();
+
+    public AMSGradOptimizer(double betaOne, double betaTwo) {
+        this.betaOne = betaOne;
+        this.betaTwo = betaTwo;
+    }
 
     @Override
     public void update(Neuron neuron, double[] inputs, double learningRate) {
@@ -56,8 +59,8 @@ public class AMSGradOptimizer implements Optimizer {
                 grad += regGradient[i];
             }
 
-            mNeuron[i] = beta1 * mNeuron[i] + (1 - beta1) * grad;
-            vNeuron[i] = beta2 * vNeuron[i] + (1 - beta2) * grad * grad;
+            mNeuron[i] = betaOne * mNeuron[i] + (1 - betaOne) * grad;
+            vNeuron[i] = betaTwo * vNeuron[i] + (1 - betaTwo) * grad * grad;
             vHatNeuron[i] = Math.max(vHatNeuron[i], vNeuron[i]);
 
             double correctedM = mNeuron[i]; // без bias correction для простоты
@@ -70,8 +73,8 @@ public class AMSGradOptimizer implements Optimizer {
         // Отдельно обновляем bias
         double gradBias = delta;
 
-        double mBias = beta1 * biasM.get(neuron) + (1 - beta1) * gradBias;
-        double vBias = beta2 * biasV.get(neuron) + (1 - beta2) * gradBias * gradBias;
+        double mBias = betaOne * biasM.get(neuron) + (1 - betaOne) * gradBias;
+        double vBias = betaTwo * biasV.get(neuron) + (1 - betaTwo) * gradBias * gradBias;
         double vHatBias = Math.max(biasVHat.get(neuron), vBias);
 
         biasM.put(neuron, mBias);

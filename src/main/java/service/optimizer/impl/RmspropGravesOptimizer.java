@@ -10,12 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class RmspropGravesOptimizer implements Optimizer {
 
     private Regularizer regularizer;
+    private double rho;
 
-    private final double rho = 0.95;
+    public RmspropGravesOptimizer(double rho) {
+        this.rho = rho;
+    }
+
     private final double epsilon = 1e-4;
 
     private final Map<Neuron, double[]> eg = new HashMap<>();

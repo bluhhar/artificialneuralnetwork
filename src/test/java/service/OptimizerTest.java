@@ -54,7 +54,7 @@ public class OptimizerTest {
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new AMSGradOptimizer(),
+                new AMSGradOptimizer(0.9, 0.999),
                 new Sigmoid(),
                 0.01,
                 1000,
@@ -71,12 +71,12 @@ public class OptimizerTest {
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new RmspropGravesOptimizer(),
+                new RmspropGravesOptimizer(0.95),
                 new Sigmoid(),
                 0.01,
                 1000,
                 label,
-                false);
+                true);
         timer.stop();
         assertTrue(result);
     }

@@ -55,7 +55,10 @@ public class RegularizerTest {
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new AMSGradOptimizer(new GroupLassoRegularizer(0.001)),
+                new AMSGradOptimizer(
+                        new GroupLassoRegularizer(0.001),
+                        0.9,
+                        0.999),
                 new Sigmoid(),
                 0.01,
                 1000,
@@ -72,7 +75,7 @@ public class RegularizerTest {
         timer = new Timer(label);
         boolean result = exec.test(
                 dataset,
-                new RmspropGravesOptimizer(new GroupLassoRegularizer(0.001)),
+                new RmspropGravesOptimizer(new GroupLassoRegularizer(0.001), 0.95),
                 new Sigmoid(),
                 0.01,
                 1000,
