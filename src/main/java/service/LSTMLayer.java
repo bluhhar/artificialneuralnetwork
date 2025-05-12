@@ -4,31 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LSTMLayer {
-    private final List<LSTMCell> cells;
-    private final int hiddenSize;
+
+    private final LSTMCell cell;
+    private double[] lastHiddenState;
+    private double[] lastCellState;
 
     public LSTMLayer(int inputSize, int hiddenSize) {
-        this.hiddenSize = hiddenSize;
-        this.cells = new ArrayList<>();
-        for (int i = 0; i < hiddenSize; i++) {
-            cells.add(new LSTMCell(inputSize));
-        }
+        this.cell = new LSTMCell(inputSize, hiddenSize);
+        this.lastHiddenState = new double[hiddenSize];
+        this.lastCellState = new double[hiddenSize];
     }
 
     public double[] forward(double[][] sequence) {
-        // sequence: [timeSteps][inputSize]
-        double[] lastHiddenStates = new double[hiddenSize];
+        double[] h = lastHiddenState;
+        double[] c = lastCellState;
 
-        for (double[] inputAtT : sequence) {
-            for (int i = 0; i < hiddenSize; i++) {
-                lastHiddenStates[i] = cells.get(i).forward(inputAtT)[0]; // берем только 1 значение (одномерно)
-            }
+        for (double[] x : sequence) {
+            h = cell.forward(x, h, c);
+            c = cell.getHistory().getLast().getC_t(); // обновляем c из последнего шага
         }
 
-        return lastHiddenStates;
+        lastHiddenState = h;
+        lastCellState = c;
+        return h;
     }
 
-    public List<LSTMCell> getCells() {
-        return cells;
+    public void backward(double[] outputGradient, double learningRate) {
+        cell.backward(outputGradient, learningRate);
     }
 }
