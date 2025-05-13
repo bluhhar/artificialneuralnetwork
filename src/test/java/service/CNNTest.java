@@ -68,25 +68,25 @@ public class CNNTest {
     }
 
     public static void trainModel(ConvolutionalNeuralNetwork cnn,
-                                  List<ImagesReader.Pair<double[][], double[]>> trainSet,
-                                  List<ImagesReader.Pair<double[][], double[]>> valSet,
+                                  List<Pair<double[][], double[]>> trainSet,
+                                  List<Pair<double[][], double[]>> valSet,
                                   int epochs, int batchSize) {
         double bestAccuracy = 0;
         int patience = 4, epochsWithoutImprovement = 0;
         double minDelta = 0.001;
 
         for (int epoch = 1; epoch <= epochs; epoch++) {
-            PrepareDataHelper.shuffle(trainSet);
+            Collections.shuffle(trainSet);
             double totalLoss = 0;
             int batchCount = 0;
 
             for (int i = 0; i < trainSet.size(); i += batchSize) {
                 var batch = trainSet.subList(i, Math.min(trainSet.size(), i + batchSize));
                 for (var sample : batch) {
-                    var output = cnn.forward(sample.first);
-                    var loss = cnn.calculateLoss(output, sample.second);
+                    var output = cnn.forward(sample.first());
+                    var loss = cnn.calculateLoss(output, sample.second());
                     totalLoss += loss;
-                    cnn.train(sample.first, sample.second, null);
+                    cnn.train(sample.first(), sample.second(), null);
                 }
 
                 if (++batchCount % 10 == 0) {
@@ -116,15 +116,15 @@ public class CNNTest {
     }
 
     public static void testModel(ConvolutionalNeuralNetwork cnn,
-                                 List<ImagesReader.Pair<double[][], double[]>> testSet) {
+                                 List<Pair<double[][], double[]>> testSet) {
         int[][] confusion = new int[10][10];
         double[] avgProb = new double[10];
         int[] classCount = new int[10];
 
         for (var sample : testSet) {
-            var output = cnn.forward(sample.first);
+            var output = cnn.forward(sample.first());
             int predicted = argMax(output);
-            int actual = argMax(sample.second);
+            int actual = argMax(sample.second());
             confusion[actual][predicted]++;
             avgProb[actual] += output[actual];
             classCount[actual]++;

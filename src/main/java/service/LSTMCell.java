@@ -85,16 +85,16 @@ public class LSTMCell {
         for (int t = T - 1; t >= 0; t--) {
             var state = history.get(t);
 
-            double[] x = state.getX_t();
-            double[] h_prev = state.getH_prev();
-            double[] c_prev = state.getC_prev();
-            double[] c = state.getC_t();
-            double[] h = state.getH_t();
+            double[] x = state.x_t();
+            double[] h_prev = state.h_prev();
+            double[] c_prev = state.c_prev();
+            double[] c = state.c_t();
+            double[] h = state.h_t();
 
-            double[] i = state.getInputGate();
-            double[] f = state.getForgetGate();
-            double[] o = state.getOutputGate();
-            double[] g = state.getCandidate();
+            double[] i = state.inputGate();
+            double[] f = state.forgetGate();
+            double[] o = state.outputGate();
+            double[] g = state.candidate();
 
             double[] tanh_c = new double[H];
             for (int i1 = 0; i1 < H; i1++) tanh_c[i1] = tanh.activate(c[i1]);

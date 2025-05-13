@@ -1,8 +1,5 @@
 package service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LSTMLayer {
 
     private final LSTMCell cell;
@@ -21,7 +18,7 @@ public class LSTMLayer {
 
         for (double[] x : sequence) {
             h = cell.forward(x, h, c);
-            c = cell.getHistory().getLast().getC_t(); // обновляем c из последнего шага
+            c = cell.getHistory().getLast().c_t(); // обновляем c из последнего шага
         }
 
         lastHiddenState = h;

@@ -1,5 +1,7 @@
 package utility;
 
+import service.Pair;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -71,17 +73,6 @@ public class ImagesReader {
             outputs.add(i == num ? 1.0 : 0.0);
         }
         return outputs;
-    }
-
-    // Простая пара для хранения двух списков
-    public static class Pair<F, S> {
-        public final F first;
-        public final S second;
-
-        public Pair(F first, S second) {
-            this.first = first;
-            this.second = second;
-        }
     }
 
     public static String getImagesPath() {

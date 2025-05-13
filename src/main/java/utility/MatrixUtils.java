@@ -1,6 +1,7 @@
 package utility;
 
 public class MatrixUtils {
+
     public static double convolveRegion(double[][] input, double[][] kernel, int x, int y) {
         int kernelWidth = kernel.length;
         int kernelHeight = kernel[0].length;

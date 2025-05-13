@@ -1,19 +1,15 @@
 package service;
 
 public class PoolingLayer {
+
     private int filterSize;
     private int stride;
 
-    // Координаты максимумов для backpropagation
-    private int[][][][] maxIndices;
+    private int[][][][] maxIndices; // координаты максимумов для backpropagation
 
     public PoolingLayer(int filterSize, int stride) {
         this.filterSize = filterSize;
         this.stride = stride;
-    }
-
-    public PoolingLayer() {
-        this(2, 2);
     }
 
     public double[][][] forward(double[][][] input) {

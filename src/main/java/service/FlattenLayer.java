@@ -1,7 +1,10 @@
 package service;
 
 public class FlattenLayer {
-    private int depth, width, height;
+
+    private int depth;
+    private int width;
+    private int height;
 
     // Прямой проход: свёртка 3D-массива в 1D
     public double[] forward(double[][][] input) {

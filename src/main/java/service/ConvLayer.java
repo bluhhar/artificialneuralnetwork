@@ -1,12 +1,15 @@
 package service;
 
+import lombok.Getter;
 import utility.ActivationFunctions;
 import utility.MatrixUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class ConvLayer {
+
     private final int kernelSize;
     private final int numKernels;
     private final int stride;
@@ -98,10 +101,6 @@ public class ConvLayer {
         }
 
         return inputGradient;
-    }
-
-    public List<double[][]> getKernels() {
-        return kernels;
     }
 
     public void pruneKernels(double sparsity) {

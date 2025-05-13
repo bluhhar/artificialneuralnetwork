@@ -7,12 +7,15 @@ import service.optimizer.Optimizer;
 import java.util.Random;
 
 public class RecurrentNeuralNetwork {
+
     private final LSTMLayer lstmLayer;
     private final Layer outputLayer;
     private final Optimizer optimizer;
     private final double learningRate;
 
-    public RecurrentNeuralNetwork(int inputSize, int lstmHiddenSize, int outputSize,
+    public RecurrentNeuralNetwork(int inputSize,
+                                  int lstmHiddenSize,
+                                  int outputSize,
                                   ActivationFunction activationFunction,
                                   Optimizer optimizer,
                                   double learningRate) {
