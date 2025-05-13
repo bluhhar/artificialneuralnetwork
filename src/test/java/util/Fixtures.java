@@ -1,5 +1,6 @@
 package util;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,5 +21,14 @@ public class Fixtures {
             throw new RuntimeException(e);
         }
         return path.toString();
+    }
+
+    public static String getModelsPath() {
+        String path = "src/main/resources/models/";
+
+        File file = new File(path);
+        String absolutePath = file.getAbsolutePath();
+
+        return absolutePath;
     }
 }
