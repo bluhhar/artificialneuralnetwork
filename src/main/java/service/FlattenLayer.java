@@ -1,12 +1,9 @@
 package service;
 
 public class FlattenLayer {
+    private int depth, width, height;
 
-    private int depth;
-    private int width;
-    private int height;
-
-    // Прямой проход: свёртка 3D-массива в 1D
+    // Прямой проход: преобразование 3D -> 1D
     public double[] forward(double[][][] input) {
         depth = input.length;
         width = input[0].length;
@@ -26,7 +23,7 @@ public class FlattenLayer {
         return output;
     }
 
-    // Обратный проход: разворачиваем 1D обратно в 3D
+    // Обратный проход: преобразование 1D -> 3D
     public double[][][] backward(double[] dOut) {
         double[][][] output = new double[depth][width][height];
         int index = 0;
@@ -42,3 +39,4 @@ public class FlattenLayer {
         return output;
     }
 }
+

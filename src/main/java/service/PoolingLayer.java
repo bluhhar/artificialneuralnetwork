@@ -1,11 +1,15 @@
 package service;
 
 public class PoolingLayer {
+    private final int filterSize;
+    private final int stride;
 
-    private int filterSize;
-    private int stride;
+    // Координаты максимумов: [depth][x][y][2] где [2] = {x, y}
+    private int[][][][] maxIndices;
 
-    private int[][][][] maxIndices; // координаты максимумов для backpropagation
+    public PoolingLayer() {
+        this(2, 2);
+    }
 
     public PoolingLayer(int filterSize, int stride) {
         this.filterSize = filterSize;
@@ -21,7 +25,7 @@ public class PoolingLayer {
         int outputHeight = (inputHeight - filterSize) / stride + 1;
 
         double[][][] output = new double[depth][outputWidth][outputHeight];
-        maxIndices = new int[depth][outputWidth][outputHeight][2];
+        maxIndices = new int[depth][outputWidth][outputHeight][2]; // (x, y) индексы
 
         for (int d = 0; d < depth; d++) {
             for (int i = 0; i < outputWidth; i++) {
@@ -73,3 +77,4 @@ public class PoolingLayer {
         return dInput;
     }
 }
+
