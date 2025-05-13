@@ -1,22 +1,21 @@
 package utility;
 
 import service.ConvolutionalNeuralNetwork;
+import service.Pair;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PrepareDataHelper {
 
-    // Преобразование List<List<Double>> в List<Pair<double[][], double[]>>
-    public static List<ImagesReader.Pair<double[][], double[]>> convertToCnnFormat(List<ImagesReader.Pair<List<Double>, List<Double>>> imageData) {
-        List<ImagesReader.Pair<double[][], double[]>> result = new ArrayList<>();
+    public static List<Pair<double[][], double[]>> convertToCnnFormat(List<Pair<List<Double>, List<Double>>> imageData) {
+        List<Pair<double[][], double[]>> result = new ArrayList<>();
 
-        int imageSize = (int) Math.sqrt(imageData.getFirst().first.size());
+        int imageSize = (int) Math.sqrt(imageData.getFirst().first().size());
 
-        for (ImagesReader.Pair<List<Double>, List<Double>> pair : imageData) {
-            List<Double> pixels = pair.first;
-            List<Double> targets = pair.second;
+        for (Pair<List<Double>, List<Double>> pair : imageData) {
+            List<Double> pixels = pair.first();
+            List<Double> targets = pair.second();
 
             double[][] image = new double[imageSize][imageSize];
             for (int i = 0; i < imageSize; i++) {
@@ -27,18 +26,17 @@ public class PrepareDataHelper {
 
             double[] targetArray = targets.stream().mapToDouble(Double::doubleValue).toArray();
 
-            result.add(new ImagesReader.Pair<>(image, targetArray));
+            result.add(new Pair<>(image, targetArray));
         }
 
         return result;
     }
 
-    // Перемешивание списка
-    public static <T> void shuffle(List<T> list) {
-        Collections.shuffle(list, new Random());
-    }
-
-    // Сохранение оригинальной модели в бинарный файл
+    /**
+     * Сохранение оригинальной модели в бинарный файл
+     * @param model Модель
+     * @param path путь к модели
+     */
     public static void saveOriginalModel(ConvolutionalNeuralNetwork model, String path) {
         try (DataOutputStream writer = new DataOutputStream(new FileOutputStream(path))) {
             writer.writeBytes("ORIG"); // сигнатура
@@ -68,7 +66,11 @@ public class PrepareDataHelper {
         }
     }
 
-    // Сохранение квантизованной модели в 8-битном формате
+    /**
+     * Сохранение квантизованной модели в 8-битном формате
+     * @param model Модель
+     * @param path путь к модели
+      */
     public static void saveQuantizedModel(ConvolutionalNeuralNetwork model, String path) {
         try (DataOutputStream writer = new DataOutputStream(new FileOutputStream(path))) {
             writer.writeBytes("QNT"); // сигнатура

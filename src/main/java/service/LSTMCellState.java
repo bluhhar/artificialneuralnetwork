@@ -1,19 +1,12 @@
 package service;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
-public class LSTMCellState {
-    private final double[] x_t;
-    private final double[] h_prev;
-    private final double[] c_prev;
-    private final double[] h_t;
-    private final double[] c_t;
-
-    private final double[] inputGate;
-    private final double[] forgetGate;
-    private final double[] outputGate;
-    private final double[] candidate;
-}
+public record LSTMCellState(
+        double[] x_t,
+        double[] h_prev,
+        double[] c_prev,
+        double[] h_t,
+        double[] c_t,
+        double[] inputGate,
+        double[] forgetGate,
+        double[] outputGate,
+        double[] candidate) {}

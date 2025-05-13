@@ -1,26 +1,15 @@
 package utility;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Arrays;
 
+@Setter
+@Getter
 public class KnowledgeDistiller {
     private double temperature = 2.0;
     private double alpha = 0.5;
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
-
-    public double getAlpha() {
-        return alpha;
-    }
-
-    public void setAlpha(double alpha) {
-        this.alpha = alpha;
-    }
 
     // Расчет градиента
     public double[] calculateGradient(double[] studentOutput, double[] teacherOutput, double[] hardTargets) {

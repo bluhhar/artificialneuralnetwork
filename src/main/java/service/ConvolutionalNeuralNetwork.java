@@ -1,6 +1,5 @@
 package service;
 
-import utility.ImagesReader;
 import utility.KnowledgeDistiller;
 
 import java.util.ArrayList;
@@ -108,8 +107,8 @@ public class ConvolutionalNeuralNetwork {
 
     public double[][][] convertTo3DArray(List<double[][]> convOutput) {
         int depth = convOutput.size();
-        int width = convOutput.get(0).length;
-        int height = convOutput.get(0)[0].length;
+        int width = convOutput.getFirst().length;
+        int height = convOutput.getFirst()[0].length;
 
         double[][][] result = new double[depth][width][height];
         for (int d = 0; d < depth; d++) {
@@ -123,11 +122,7 @@ public class ConvolutionalNeuralNetwork {
     }
 
     public List<double[][]> convertTo2DList(double[][][] input) {
-        List<double[][]> result = new ArrayList<>();
-        for (double[][] matrix : input) {
-            result.add(matrix);
-        }
-        return result;
+        return new ArrayList<>(Arrays.asList(input));
     }
 
     public double[] forward(double[][] input) {
@@ -147,12 +142,12 @@ public class ConvolutionalNeuralNetwork {
         return loss;
     }
 
-    public double evaluate(List<ImagesReader.Pair<double[][], double[]>> testSet) {
+    public double evaluate(List<Pair<double[][], double[]>> testSet) {
         int correct = 0;
-        for (ImagesReader.Pair<double[][], double[]> sample : testSet) {
-            double[] output = forward(sample.first);
+        for (Pair<double[][], double[]> sample : testSet) {
+            double[] output = forward(sample.first());
             int predicted = argMax(output);
-            int actual = argMax(sample.second);
+            int actual = argMax(sample.second());
             if (predicted == actual) {
                 correct++;
             }

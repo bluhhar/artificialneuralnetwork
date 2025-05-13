@@ -1,11 +1,14 @@
 package service;
 
+import lombok.Getter;
 import utility.ActivationFunctions;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class FullyConnectedLayer {
+
     private final int inputSize;
     private final int outputSize;
     private final double[][] weights;
@@ -143,19 +146,6 @@ public class FullyConnectedLayer {
         }
 
         System.out.printf("Квантизация FC: [%.6f, %.6f] -> 256 уровней\n", min, max);
-    }
-
-    // Getters if needed
-    public double[][] getWeights() {
-        return weights;
-    }
-
-    public double[] getBiases() {
-        return biases;
-    }
-
-    public double[] getLastOutput() {
-        return lastOutput;
     }
 }
 
