@@ -23,6 +23,15 @@ public class Fixtures {
         return path.toString();
     }
 
+    public String getWeatherPath() {
+        String path = "src/main/resources/datasets/weatherAUS.csv";
+
+        File file = new File(path);
+        String absolutePath = file.getAbsolutePath();
+
+        return absolutePath;
+    }
+
     public static String getModelsPath() {
         String path = "src/main/resources/models/";
 
